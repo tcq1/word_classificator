@@ -1,0 +1,33 @@
+[tool.poetry]
+name = "word-classificator"
+version = "0.1.0"
+description = ""
+authors = ["tcq1 <tru.chu.qu@gmail.com>"]
+readme = "README.md"
+packages = [{include = "word_classificator"}]
+
+[tool.poetry.dependencies]
+python = ">=3.9,<3.11"
+kedro = "^0.18.3"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.kedro]
+package_name = "word_classificator"
+project_name = "word_classificator"
+project_version = "0.18.3"
+
+[tool.isort]
+profile = "black"
+
+[tool.pytest.ini_options]
+addopts = """
+--cov-report term-missing \
+--cov src/word_classificator -ra"""
+
+[tool.coverage.report]
+fail_under = 0
+show_missing = true
+exclude_lines = ["pragma: no cover", "raise NotImplementedError"]
