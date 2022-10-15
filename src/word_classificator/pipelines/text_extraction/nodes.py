@@ -147,7 +147,7 @@ def get_tokens(spacy_model, text):
     return word_dict, lemma_dict
 
 
-def count_token_appearances(texts: List[str], spacy_model) -> Tuple[Dict, Dict]:
+def count_token_appearances(texts: List[str], spacy_model) -> Tuple[List, List]:
     """ Convert each text into a Dict containing the tokens and their number of appearances (same with lemmas).
 
     :param texts: list of texts
@@ -159,6 +159,8 @@ def count_token_appearances(texts: List[str], spacy_model) -> Tuple[Dict, Dict]:
 
     # iterate over texts
     for text in texts:
-        token_count.append(get_tokens(spacy_model, text))
+        tokens, lemmas = get_tokens(spacy_model, text)
+        token_count.append(tokens)
+        lemma_count.append(lemmas)
 
-    # TODO: how to return
+    return token_count, lemma_count
