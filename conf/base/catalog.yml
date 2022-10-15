@@ -1,9 +1,20 @@
-token_word_counts:
+# Text extraction datasets
+token_word_counts_pdf:
   type: word-classificator.extras.datasets.document_count_dataset.DocumentCountDataSet
-  filepath: data/03_primary/token_word_counts.csv
+  filepath: data/03_primary/token_word_counts_pdf.csv
   layer: primary
 
-lemma_word_counts:
+lemma_word_counts_pdf:
   type: word-classificator.extras.datasets.document_count_dataset.DocumentCountDataSet
-  filepath: data/03_primary/lemma_word_counts.csv
+  filepath: data/03_primary/lemma_word_counts_pdf.csv
+  layer: primary
+
+token_word_counts_wikipedia:
+  type: word-classificator.extras.datasets.document_count_dataset.DocumentCountDataSet
+  filepath: data/03_primary/token_word_counts_wikipedia.csv
+  layer: primary
+
+lemma_word_counts_wikipedia:
+  type: word-classificator.extras.datasets.document_count_dataset.DocumentCountDataSet
+  filepath: data/03_primary/lemma_word_counts_wikipedia.csv
   layer: primary

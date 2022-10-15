@@ -12,6 +12,7 @@ kedro = "^0.18.3"
 pdfminer = "^20191125"
 spacy = "^3.4.1"
 kedro-viz = "^5.1.1"
+wikipedia = "^1.4.0"
 
 [build-system]
 requires = ["poetry-core"]

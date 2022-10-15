@@ -1,15 +1,19 @@
 import io
+import logging
 import os
-import re
 import shutil
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import List, Tuple
 
+import pdfminer.pdfdocument
+import wikipedia
 from pdfminer.converter import TextConverter
 from pdfminer.layout import LAParams
 from pdfminer.pdfinterp import PDFPageInterpreter
 from pdfminer.pdfinterp import PDFResourceManager
 from pdfminer.pdfpage import PDFPage
+
+log = logging.getLogger(__name__)
 
 
 def cleanup_data(root_dir: str, target_dir: str, extensions: List[str]):
@@ -28,13 +32,15 @@ def cleanup_data(root_dir: str, target_dir: str, extensions: List[str]):
         # iterate over files
         for filename in filenames:
             # copy files with correct extension to target directory
+            filepath = os.path.join(root, filename).replace("\\", "/")
             try:
                 ext = filename.split(".")[1]
                 if ext in extensions:
-                    filepath = os.path.join(root, filename).replace("\\", "/")
                     shutil.copyfile(filepath, f"{target_dir}/{filename}")
             except IndexError:
-                continue
+                log.info(f"Couldn't get extension of file {filepath}. Skipping...")
+            except FileNotFoundError:
+                log.info(f"Couldn't find file {filepath}. Skipping...")
 
     return True
 
@@ -99,11 +105,16 @@ def convert_pdfs_to_text(pdf_root_dir: str, _) -> List[str]:
         # convert and preprocess text file
         for filename in filenames:
             filepath = os.path.join(root, filename)
-            text = pdf_to_string(filepath)
-            processed_text = replace_cid_codes(text)
+            try:
+                text = pdf_to_string(filepath)
+                processed_text = replace_cid_codes(text)
 
-            # add to dataset
-            dataset.append(processed_text)
+                # add to dataset
+                dataset.append(processed_text)
+            except FileNotFoundError:
+                log.info(f"Couldn't find file {filepath}. Skipping...")
+            except pdfminer.pdfdocument.PDFTextExtractionNotAllowed:
+                log.info(f"Couldn't extract text from {filepath}. Skipping...")
 
     return dataset
 
@@ -167,3 +178,32 @@ def count_token_appearances(texts: List[str], spacy_model) -> Tuple[List, List]:
         lemma_count.append(lemmas)
 
     return token_count, lemma_count
+
+
+def get_wikipedia_articles(num_pages: int, language: str) -> List[str]:
+    """ Get a list of the content of random wikipedia articles.
+
+    :param num_pages: number of wikipedia pages to load
+    :param language: language of articles
+    :return: list of article content (texts)
+    """
+    wikipedia.set_lang(language)
+
+    articles = []
+
+    # find valid random articles
+    counter = 0
+    while counter < num_pages:
+        try:
+            articles.append(wikipedia.page(title=wikipedia.random()).content)
+            counter += 1
+        except wikipedia.DisambiguationError:
+            # skip if DisambiguationError appears and decrement counter
+            log.info('DisambiguationError! Skip...')
+            continue
+        except wikipedia.PageError:
+            # skip if PageError appears and decrement counter
+            log.info('PageError! Skip...')
+            continue
+
+    return articles
