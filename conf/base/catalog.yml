@@ -1,0 +1,9 @@
+token_word_counts:
+  type: word-classificator.extras.datasets.document_count_dataset.DocumentCountDataSet
+  filepath: data/03_primary/token_word_counts.csv
+  layer: primary
+
+lemma_word_counts:
+  type: word-classificator.extras.datasets.document_count_dataset.DocumentCountDataSet
+  filepath: data/03_primary/lemma_word_counts.csv
+  layer: primary

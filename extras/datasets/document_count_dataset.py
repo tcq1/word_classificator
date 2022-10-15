@@ -3,7 +3,7 @@ from typing import Any, Dict, List
 from kedro.io import AbstractDataSet
 
 
-class DocumentCountDataSet(AbstractDataSet[List]):
+class DocumentCountDataSet(AbstractDataSet):
     """ Load/save so-called document count datasets, which are lists of documents, for which the number of tokens/lemmas/words are counted.
 
     Each document is a dictionary with the keys being the tokens and the values their number of appearances in the respective document.
@@ -45,7 +45,6 @@ def export_docs(documents, output_path):
     :param documents: list of dictionaries
     :param output_path: file path to csv file
     """
-
     for doc in documents:
         export_dict(doc, output_path)
 
@@ -56,8 +55,7 @@ def export_dict(dictionary, output_path):
     :param dictionary: dictionary with words as keys and the number of appearances as values
     :param output_path: file path to csv file
     """
-
-    with open(output_path, 'a', encoding='utf-8') as f:
+    with open(output_path, 'a+', encoding='utf-8') as f:
         for key in dictionary.keys():
             try:
                 f.write('{}:{},'.format(key, dictionary[key]))
@@ -87,10 +85,10 @@ def import_docs(file_path):
 
 def import_dict(line):
     """ Converts line of a csv file to a dict
+
     :param line: line of csv file
     :return: dictionary
     """
-
     dictionary = {}
 
     elements = line.split(',')

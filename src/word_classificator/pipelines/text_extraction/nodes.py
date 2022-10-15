@@ -18,7 +18,7 @@ def cleanup_data(root_dir: str, target_dir: str, extensions: List[str]):
     :param root_dir: root directory
     :param target_dir: target directory
     :param extensions: extensions to not remove
-    :return: None
+    :return: bool determining success
     """
     # if target dir doesn't exist create
     Path(target_dir).mkdir(parents=True, exist_ok=True)
@@ -35,6 +35,8 @@ def cleanup_data(root_dir: str, target_dir: str, extensions: List[str]):
                     shutil.copyfile(filepath, f"{target_dir}/{filename}")
             except IndexError:
                 continue
+
+    return True
 
 
 def pdf_to_string(path):
@@ -83,10 +85,11 @@ def replace_cid_codes(string):
     return string
 
 
-def convert_pdfs_to_text(pdf_root_dir: str) -> List[str]:
+def convert_pdfs_to_text(pdf_root_dir: str, _) -> List[str]:
     """ Convert all pdf files to a list of texts.
 
     :param pdf_root_dir: root directory containing pdf files
+    :param _: placeholder to ensure correct pipeline execution order
     :return: Dict with filenames as keys and data as value
     """
     dataset = []
