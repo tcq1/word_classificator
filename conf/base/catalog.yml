@@ -18,3 +18,26 @@ lemma_word_counts_wikipedia:
   type: word_classificator.extras.datasets.document_count_dataset.DocumentCountDataSet
   filepath: data/03_primary/lemma_word_counts_wikipedia.csv
   layer: primary
+
+# Data preprocessing datasets
+positive_samples:
+  type: pandas.CSVDataSet
+  filepath: data/04_feature/raw_samples/positive_samples.csv
+  layer: feature
+
+negative_samples:
+  type: pandas.CSVDataSet
+  filepath: data/04_feature/raw_samples/negative_samples.csv
+  layer: feature
+
+positive_samples_features:
+  type: pickle.PickleDataSet
+  filepath: data/04_feature/features/positive_samples.pkl
+  layer: feature
+
+negative_samples_features:
+  type: pickle.PickleDataSet
+  filepath: data/04_feature/features/negative_samples.pkl
+  layer: feature
+
+# Model input

@@ -1,0 +1,14 @@
+# split ratio of training and test dataset (specify ratio of train)
+train_test_split_ratio: 0.7
+
+# feature dictionary determining which features to use
+features:
+  get_number_syllables: True
+  get_word_length: True
+  has_capital_letter: True
+  appearance_per_doc_length: True
+  tf_idf: False
+  normed_word_vector: False
+  get_suffix: True
+  get_prefix: True
+  is_stop_word: True
