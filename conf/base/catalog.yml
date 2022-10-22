@@ -41,3 +41,33 @@ negative_samples_features:
   layer: feature
 
 # Model input
+x_train:
+  type: pickle.PickleDataSet
+  filepath: data/05_model_input/model_input/x_train.pkl
+  layer: model_input
+
+x_test:
+  type: pickle.PickleDataSet
+  filepath: data/05_model_input/model_input/x_test.pkl
+  layer: model_input
+
+y_train:
+  type: pickle.PickleDataSet
+  filepath: data/05_model_input/labels/y_train.pkl
+  layer: model_input
+
+y_test:
+  type: pickle.PickleDataSet
+  filepath: data/05_model_input/labels/y_test.pkl
+  layer: model_input
+
+# Normalization vectors
+norm_min:
+  type: pickle.PickleDataSet
+  filepath: data/05_model_input/normalization_vectors/min_vector.pkl
+  layer: model_input
+
+norm_max:
+  type: pickle.PickleDataSet
+  filepath: data/05_model_input/normalization_vectors/max_vector.pkl
+  layer: model_input
