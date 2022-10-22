@@ -19,4 +19,5 @@ def register_pipelines() -> Dict[str, Pipeline]:
 
     pipelines["__default__"] = sum(pipelines.values())
     pipelines["data_preprocessing"] = load_spacy_model.create_pipeline() + data_preprocessing.create_pipeline()
+
     return pipelines
