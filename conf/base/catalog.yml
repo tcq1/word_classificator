@@ -1,3 +1,9 @@
+# spacy nlp model
+spacy_model:
+  type: pickle.PickleDataSet
+  filepath: data/06_models/nlp_models/spacy_model.pkl
+  layer: models
+
 # Text extraction datasets
 token_word_counts_pdf:
   type: word_classificator.extras.datasets.document_count_dataset.DocumentCountDataSet
@@ -30,14 +36,14 @@ negative_samples:
   filepath: data/04_feature/raw_samples/negative_samples.csv
   layer: feature
 
-positive_samples_features:
-  type: pickle.PickleDataSet
-  filepath: data/04_feature/features/positive_samples.pkl
+cleaned_word_dataset:
+  type: pandas.CSVDataSet
+  filepath: data/04_feature/processed_samples/cleaned_dataset.csv
   layer: feature
 
-negative_samples_features:
+feature_vectors:
   type: pickle.PickleDataSet
-  filepath: data/04_feature/features/negative_samples.pkl
+  filepath: data/04_feature/features/feature_vectors.pkl
   layer: feature
 
 # Model input

@@ -6,20 +6,6 @@ from sklearn.model_selection import train_test_split
 from word_classificator.classifier_features.features import *
 
 
-def merge_datasets(*datasets: List[Dict]) -> List[Dict]:
-    """ Merge multiple datasets to one. A dataset in this case is a list of dicts (see document_count_dataset).
-
-    :param datasets: list of datasets
-    :return: merged dataset
-    """
-    merged_dataset = []
-
-    for dataset in datasets:
-        merged_dataset.extend(dataset)
-
-    return merged_dataset
-
-
 def generate_positive_samples(dataset: List[Dict]) -> pd.DataFrame:
     """ Extract all words of a dataset and label them as positive.
 
@@ -58,6 +44,47 @@ def generate_labeled_samples(dataset: List[Dict], label: bool) -> pd.DataFrame:
     return df
 
 
+def merge_datasets(*datasets: pd.DataFrame) -> pd.DataFrame:
+    """ Merge multiple datasets to one. A dataset in this case is a dataframe containing a 'Word' and a 'Label' column.
+
+    :param datasets: list of datasets
+    :return: merged dataset
+    """
+    return pd.concat(datasets)
+
+
+def clean_dataset(dataset: pd.DataFrame, spacy_model) -> pd.DataFrame:
+    """ Clean a dataset by removing invalid entries.
+
+    :param dataset: dataset
+    :param spacy_model: spacy model
+    :return: cleaned document count dataset
+    """
+    # drop duplicates
+    dataset.drop_duplicates(inplace=True)
+
+    # remove non-alphabetical words
+    non_alpha_mask = dataset.apply(func=word_is_alphabetical, axis=1, args=[spacy_model])
+    dataset = dataset[non_alpha_mask]
+
+    # TODO: language filter
+
+    return dataset
+
+
+def word_is_alphabetical(row, spacy_model) -> bool:
+    """ Check whether a word only contains letters or not.
+
+    :param row: row of a dataframe containing 'Word' column
+    :param spacy_model: spacy model to use
+    :return: True if word only contains letters.
+    """
+    try:
+        return spacy_model(row['Word'])[0].is_alpha
+    except ValueError:
+        return False
+
+
 def extract_features(labeled_dataset: pd.DataFrame, features: Dict, spacy_model,
                      document_counts_pdf: List[Dict], document_counts_wikipedia: List[Dict]) -> np.array:
     """ Generate the feature vector for each word of a labeled dataset and collect the feature vectors in a dataframe.
@@ -77,7 +104,7 @@ def extract_features(labeled_dataset: pd.DataFrame, features: Dict, spacy_model,
 
     # get list of feature vectors
     feature_vectors = [get_feature_vector_for_word(word, class_label, features_to_use, spacy_model, document_counts_pdf, document_counts_wikipedia)
-                       for word, class_label in zip(str(labeled_dataset['Word']), labeled_dataset['Label'])]
+                       for word, class_label in zip(labeled_dataset['Word'], labeled_dataset['Label'])]
 
     return np.array(feature_vectors)
 
@@ -123,15 +150,6 @@ def get_feature_vector_for_word(word: str, class_label: int, features_to_use: Li
     feature_values.append(class_label)
 
     return np.array(feature_values)
-
-
-def merge_feature_vectors(*vectors: np.ndarray):
-    """ Merge multiple sets of feature vectors together
-
-    :param vectors: feature vectors as numpy arrays
-    :return: all feature vectors merged into one array
-    """
-    return np.concatenate(vectors)
 
 
 def split_data(dataset: np.ndarray, train_size: float) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:

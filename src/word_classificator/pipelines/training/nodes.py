@@ -20,13 +20,13 @@ def initialize_classifier(model_params: Dict):
 
     if model_type == 'rfc':
         mlflow.log_param("model", "rfc")
-        return RandomForestClassifier(model_params)
+        return RandomForestClassifier(**model_params)
     elif model_type == 'knn':
         mlflow.log_param("model", "knn")
-        return KNeighborsClassifier(model_params)
+        return KNeighborsClassifier(**model_params)
     elif model_type == 'svm':
         mlflow.log_param("model", "svm")
-        return SVC(model_params)
+        return SVC(**model_params)
     else:
         raise NotImplementedError(f"Classifier {model_type} has not been implemented!")
 
