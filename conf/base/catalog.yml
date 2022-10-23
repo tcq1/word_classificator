@@ -46,6 +46,16 @@ feature_vectors:
   filepath: data/04_feature/features/feature_vectors.pkl
   layer: feature
 
+words_to_predict_raw:
+  type: text.TextDataSet
+  filepath: data/04_feature/words_to_predict/words_to_predict.txt
+  layer: feature
+
+words_to_predict_features:
+  type: pickle.PickleDataSet
+  filepath: data/04_feature/words_to_predict/feature_vectors.pkl
+  layer: feature
+
 # Model input
 x_train:
   type: pickle.PickleDataSet
@@ -67,6 +77,11 @@ y_test:
   filepath: data/05_model_input/labels/y_test.pkl
   layer: model_input
 
+words_to_predict:
+  type: pickle.PickleDataSet
+  filepath: data/05_model_input/model_input/words_to_predict.pkl
+  layer: model_input
+
 # Normalization vectors
 norm_min:
   type: pickle.PickleDataSet
@@ -83,6 +98,12 @@ trained_classifier:
   type: pickle.PickleDataSet
   filepath: data/06_models/classifiers/classifier.pkl
   layer: models
+
+# Predictions
+predicted_words_labeled:
+  type: json.JSONDataSet
+  filepath: data/07_model_output/predicted_words.json
+  layer: model_output
 
 # Evaluation
 model_metrics_dict:

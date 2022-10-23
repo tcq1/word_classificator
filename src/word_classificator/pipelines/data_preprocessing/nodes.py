@@ -1,7 +1,10 @@
 from typing import Dict, List, Tuple
 
+import numpy as np
 import pandas as pd
+import spacy.tokens
 from sklearn.model_selection import train_test_split
+from spacy.tokens import Token
 
 from word_classificator.classifier_features.features import *
 
@@ -85,11 +88,22 @@ def word_is_alphabetical(row, spacy_model) -> bool:
         return False
 
 
-def extract_features(labeled_dataset: pd.DataFrame, features: Dict, spacy_model,
+def get_lemmas_from_text(text: str, spacy_model) -> pd.DataFrame:
+    """ Extract the tokens of a text and return a list of all tokens lemmas.
+
+    :param text: text
+    :param spacy_model: spacy model
+    :return: dataframe of lemmas
+    """
+    return pd.DataFrame(data=[token.lemma_ for token in spacy_model(text) if 'x' in token.shape_.lower()],
+                        columns=["Word"])
+
+
+def extract_features(dataframe: pd.DataFrame, features: Dict, spacy_model,
                      document_counts_pdf: List[Dict], document_counts_wikipedia: List[Dict]) -> np.array:
     """ Generate the feature vector for each word of a labeled dataset and collect the feature vectors in a dataframe.
 
-    :param labeled_dataset: dataframe containing a 'word' column and a 'label' column
+    :param dataframe: dataframe containing a 'Word' column
     :param features: configurable parameter determining the features to use
     :param spacy_model: nlp model
     :param document_counts_pdf: document word count dataset for pdf files
@@ -103,18 +117,17 @@ def extract_features(labeled_dataset: pd.DataFrame, features: Dict, spacy_model,
             features_to_use.append(feature_name)
 
     # get list of feature vectors
-    feature_vectors = [get_feature_vector_for_word(word, class_label, features_to_use, spacy_model, document_counts_pdf, document_counts_wikipedia)
-                       for word, class_label in zip(labeled_dataset['Word'], labeled_dataset['Label'])]
+    feature_vectors = [get_feature_vector_for_word(word, features_to_use, spacy_model, document_counts_pdf, document_counts_wikipedia)
+                       for word in dataframe['Word']]
 
     return np.array(feature_vectors)
 
 
-def get_feature_vector_for_word(word: str, class_label: int, features_to_use: List, spacy_model, document_counts_pdf: List[Dict],
+def get_feature_vector_for_word(word: str, features_to_use: List, spacy_model, document_counts_pdf: List[Dict],
                                 document_counts_wikipedia: List[Dict]) -> np.array:
     """ Get the feature vector for a single word.
 
     :param word: word to extract features from
-    :param class_label: class label of feature vector
     :param features_to_use: list of feature functions
     :param spacy_model: nlp model used for nlp feature extraction
     :param document_counts_pdf: document word count dataset for pdf files
@@ -146,22 +159,19 @@ def get_feature_vector_for_word(word: str, class_label: int, features_to_use: Li
         elif feature == "is_stop_word":
             feature_values.append(is_stop_word(word, spacy_model))
 
-    # add class label as last element
-    feature_values.append(class_label)
-
     return np.array(feature_values)
 
 
-def split_data(dataset: np.ndarray, train_size: float) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+def split_data(features: np.ndarray, labeled_dataset: pd.DataFrame, train_size: float) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """ Extract features and labels of a dataset and split into train and test datasets.
 
-    :param dataset: feature vectors with labels in last column
+    :param features: feature vectors with labels in last column
+    :param labeled_dataset: dataframe containing a 'Label' column
     :param train_size: size of test dataset
     :return: x_train, x_test, y_train, y_test
     """
-    # extract features and labels from dataset
-    features = dataset[:, 0:-1]
-    labels = dataset[:, -1]
+    # extract labels from labeled dataset
+    labels = labeled_dataset["Label"]
 
     # split
     x_train, x_test, y_train, y_test = train_test_split(features, labels, train_size=train_size, stratify=labels)
@@ -169,8 +179,8 @@ def split_data(dataset: np.ndarray, train_size: float) -> Tuple[np.ndarray, np.n
     return x_train, x_test, y_train, y_test
 
 
-def normalize_data(x_train: np.ndarray, x_test: np.ndarray) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
-    """ Normalize the feature vectors using Min-max normalization. Also returns the normalization vectors.
+def fit_normalize_data(x_train: np.ndarray, x_test: np.ndarray) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+    """ Normalize the feature vectors using Min-max normalization, fitted on the training data. Also returns the normalization vectors.
 
     :param x_train: feature vectors of training dataset
     :param x_test: feature vectors of test dataset
@@ -183,3 +193,15 @@ def normalize_data(x_train: np.ndarray, x_test: np.ndarray) -> Tuple[np.ndarray,
     x_test = (x_test - min_x) / (max_x - min_x)
 
     return x_train, x_test, min_x, max_x
+
+
+def normalize_data(data: np.ndarray, min_x: np.ndarray, max_x: np.ndarray) -> np.ndarray:
+    """ Normalize the input data using Min-max normalization with specified min and max vectors.
+
+    :param data: feature vectors of input data
+    :param min_x: vector containing the smallest values for each column
+    :param max_x: vector containing the largest values for each column
+    :return: normalized data
+    """
+    return (data - min_x) / (max_x - min_x)
+
