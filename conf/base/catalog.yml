@@ -101,8 +101,8 @@ trained_classifier:
 
 # Predictions
 predicted_words_labeled:
-  type: json.JSONDataSet
-  filepath: data/07_model_output/predicted_words.json
+  type: pandas.CSVDataSet
+  filepath: data/07_model_output/predicted_words.csv
   layer: model_output
 
 # Evaluation
