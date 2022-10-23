@@ -31,10 +31,10 @@ def initialize_classifier(model_params: Dict):
         raise NotImplementedError(f"Classifier {model_type} has not been implemented!")
 
 
-def train_classifier(clf, x: np.ndarray, y: np.ndarray, k: int, scoring_method: str):
+def train_classifier(classifier, x: np.ndarray, y: np.ndarray, k: int, scoring_method: str):
     """ Train a classifier using K-Fold cross validation.
 
-    :param clf: classifier
+    :param classifier: classifier
     :param x: features for model input
     :param y: labels matching features
     :param k: k parameter for k-fold cross validation
@@ -42,10 +42,11 @@ def train_classifier(clf, x: np.ndarray, y: np.ndarray, k: int, scoring_method: 
     :return: trained classifier
     """
     # train model
-    score = cross_val_score(clf, x, y, cv=k, scoring=scoring_method)
+    classifier.fit(x, y)
+    score = cross_val_score(classifier, x, y, cv=k, scoring=scoring_method)
 
     # log metrics
     mlflow.log_metric("training_score_mean", score.mean())
     mlflow.log_metric("training_score_deviation", score.std())
 
-    return clf
+    return classifier
