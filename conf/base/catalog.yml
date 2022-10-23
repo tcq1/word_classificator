@@ -77,3 +77,15 @@ norm_max:
   type: pickle.PickleDataSet
   filepath: data/05_model_input/normalization_vectors/max_vector.pkl
   layer: model_input
+
+# Classifier
+trained_classifier:
+  type: pickle.PickleDataSet
+  filepath: data/06_models/classifiers/classifier.pkl
+  layer: models
+
+# Evaluation
+model_metrics_dict:
+  type: json.JSONDataSet
+  filepath: data/08_reporting/model_metrics/model_metrics.json
+  layer: reporting
