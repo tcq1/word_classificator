@@ -1,21 +1,21 @@
 # Pipeline text_extraction
 
-> *Note:* This is a `README.md` boilerplate generated using `Kedro 0.18.3`.
-
 ## Overview
 
-<!---
-Please describe your modular pipeline here.
--->
+This pipeline contains functionality to generate datasets by extracting texts from
+either PDF files or random wikipedia articles. Also, so-called Document Count Datasets
+are created based on those datasets, which count the appearance of words per document,
+which can be further used as a feature for the classifier.
+
+In order to process PDF files it is necessary to place the files in ``data/01_raw``.
 
 ## Pipeline inputs
 
-<!---
-The list of pipeline inputs.
--->
+* ``spacy_model``
 
 ## Pipeline outputs
 
-<!---
-The list of pipeline outputs.
--->
+* ``token_word_counts_pdf``
+* ``lemma_word_counts_pdf``
+* ``token_word_counts_wikipedia``
+* ``lemma_word_counts_wikipedia``

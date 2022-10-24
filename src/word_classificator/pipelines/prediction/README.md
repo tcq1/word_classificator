@@ -1,21 +1,18 @@
 # Pipeline prediction
 
-> *Note:* This is a `README.md` boilerplate generated using `Kedro 0.18.3`.
-
 ## Overview
 
-<!---
-Please describe your modular pipeline here.
--->
+This pipeline uses the trained classifier to make predictions.
 
 ## Pipeline inputs
 
-<!---
-The list of pipeline inputs.
--->
+* ``trained_classifier``
+* ``x_test``
+* ``words_to_predict``
+* ``words_to_predict_df``
 
 ## Pipeline outputs
 
-<!---
-The list of pipeline outputs.
--->
+* ``predictions_x_test``
+* ``predictions``
+* ``predicted_words_labeled``

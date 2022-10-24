@@ -1,21 +1,15 @@
 # Pipeline evaluation
 
-> *Note:* This is a `README.md` boilerplate generated using `Kedro 0.18.3`.
-
 ## Overview
 
-<!---
-Please describe your modular pipeline here.
--->
+This pipeline is used to evaluate a trained models performance, by calculating
+different classification metrics based on the models predictions on a test dataset.
 
 ## Pipeline inputs
 
-<!---
-The list of pipeline inputs.
--->
+* ``predictions_x_test``
+* ``y_test``
 
 ## Pipeline outputs
 
-<!---
-The list of pipeline outputs.
--->
+* ``model_metrics_dict``

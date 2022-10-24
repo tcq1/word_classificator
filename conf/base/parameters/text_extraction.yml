@@ -1,6 +1,11 @@
+# root directory for input files
 raw_data_dir: data/01_raw/korpus
+# directory in which pdf files are placed
 pdf_data_dir: data/02_intermediate/pdf_files
+# allowed file extensions
 allowed_extensions: [pdf]
 
+# number of wikipedia articles to load
 num_wikipedia_articles: 10
+# wikipedia language
 wikipedia_language: de

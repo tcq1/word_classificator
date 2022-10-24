@@ -1,21 +1,19 @@
 # Pipeline training
 
-> *Note:* This is a `README.md` boilerplate generated using `Kedro 0.18.3`.
-
 ## Overview
 
-<!---
-Please describe your modular pipeline here.
--->
+This pipeline initializes a model and trains it. Different models can be configured
+in ``conf/base/parameters/training.yml`` via the ``model_parameters`` entry. In order
+to change the desired model change the input of the ``initialize_classifier`` node in
+``src/word_classificator/pipelines/training/pipeline.py``.
+
+The training parameter file also contains parameters to configure the training process.
 
 ## Pipeline inputs
 
-<!---
-The list of pipeline inputs.
--->
+* ``x_train``
+* ``y_train``
 
 ## Pipeline outputs
 
-<!---
-The list of pipeline outputs.
--->
+* ``trained_classifier``

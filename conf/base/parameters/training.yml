@@ -1,3 +1,4 @@
+# model parameters
 model_parameters:
   rfc:
     type: rfc

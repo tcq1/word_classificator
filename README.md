@@ -2,121 +2,55 @@
 
 ## Overview
 
-This is your new Kedro project, which was generated using `Kedro 0.18.3`.
+This project creates a machine learning model which is able to classify words regarding whether a word belongs
+to a certain context or not. Therefore, the texts of PDF files form the base of the context, e.g. using a 
+PDF collection of material testing will train a model that can determine if a word belongs to the domain of
+material testing or not. Furthermore, the model can perform predictions for whole texts and find words belonging
+to the trained domain.
 
-Take a look at the [Kedro documentation](https://kedro.readthedocs.io) to get started.
+## Kedro 
+This project is based on [Kedro](https://kedro.readthedocs.io/en/stable/). For further information, feel free to visit Kedro's well documented documentation.
 
-## Rules and guidelines
+## spaCy
+For different NLP tasks, such as tokenization, feature extraction, etc. [spaCy](https://spacy.io/) is used. It is necessary
+to download a spaCy model in order to execute this projects pipelines. For further details visit the [spaCy models page](https://spacy.io/usage/models).
 
-In order to get the best out of the template:
-
-* Don't remove any lines from the `.gitignore` file we provide
-* Make sure your results can be reproduced by following a [data engineering convention](https://kedro.readthedocs.io/en/stable/faq/faq.html#what-is-data-engineering-convention)
-* Don't commit data to your repository
-* Don't commit any credentials or your local configuration to your repository. Keep all your credentials and local configuration in `conf/local/`
+## MlFlow
+This project uses [mlflow](https://mlflow.org/) for model tracking. mlflow comes with the tool mlflow ui, which makes it possible
+to track the model's performance in a simple webinterface. This project uses the Kedro plugin ``kedro-mlflow``, which makes configuration easy via
+the ``conf/base/mlflow.yml`` configuration file. To open mlflow ui run ``mlflow ui`` in the projects root (this directory).
 
 ## How to install dependencies
 
-Declare any dependencies in `src/requirements.txt` for `pip` installation and `src/environment.yml` for `conda` installation.
+This project mainly uses [pyPoetry](https://python-poetry.org/) for the management of the Python environment. 
+Dependencies are declared in the ``pyproject.toml``. To set up the environment run ``poetry install`` in the projects root (this directory).
+If you want to add new dependencies, run ``poetry add <DEPENDENCY>``.
 
-To install them, run:
+For further details visit the [documentation of pyPoetry](https://python-poetry.org/docs/).
 
-```
-pip install -r src/requirements.txt
-```
+## Project and Pipeline configuration
+Kedro makes it easy to configure project and pipeline parameters. In ``conf/local`` credentials or information can be stored, which is not supposed to be added
+to any kind of repository or docker image. In ``conf/base`` are configuration files for logging, mlflow and the Kedro catalog (for further details on the catalog visit 
+[Kedro docs](https://kedro.readthedocs.io/en/stable/data/data_catalog.html)).
+Kedro pipelines can be configured in the configuration files in ``conf/base/parameters``. For more details regarding pipeline parameters have a look at the pipelines README.md file,
+which can be found in ``src/word_classificator/pipelines/<PIPELINE>``.
 
-## How to run your Kedro pipeline
+## How to run Kedro pipelines
 
-You can run your Kedro project with:
+In order to run Kedro pipelines simply run ``kedro pipeline run --pipeline=<PIPELINE NAME>`` in the projects root (this directory).
+If the --pipeline flag is missing the default pipeline is run.
 
-```
-kedro run
-```
+This Kedro project mainly supports two pipelines:
 
-## How to test your Kedro project
-
-Have a look at the file `src/tests/test_run.py` for instructions on how to write your tests. You can run your tests as follows:
-
-```
-kedro test
-```
-
-To configure the coverage threshold, go to the `.coveragerc` file.
-
-## Project dependencies
-
-To generate or update the dependency requirements for your project:
-
-```
-kedro build-reqs
-```
-
-This will `pip-compile` the contents of `src/requirements.txt` into a new file `src/requirements.lock`. You can see the output of the resolution by opening `src/requirements.lock`.
-
-After this, if you'd like to update your project requirements, please update `src/requirements.txt` and re-run `kedro build-reqs`.
-
-[Further information about project dependencies](https://kedro.readthedocs.io/en/stable/kedro_project_setup/dependencies.html#project-specific-dependencies)
-
-## How to work with Kedro and notebooks
-
-> Note: Using `kedro jupyter` or `kedro ipython` to run your notebook provides these variables in scope: `context`, `catalog`, and `startup_error`.
->
-> Jupyter, JupyterLab, and IPython are already included in the project requirements by default, so once you have run `pip install -r src/requirements.txt` you will not need to take any extra steps before you use them.
-
-### Jupyter
-To use Jupyter notebooks in your Kedro project, you need to install Jupyter:
-
-```
-pip install jupyter
-```
-
-After installing Jupyter, you can start a local notebook server:
-
-```
-kedro jupyter notebook
-```
-
-### JupyterLab
-To use JupyterLab, you need to install it:
-
-```
-pip install jupyterlab
-```
-
-You can also start JupyterLab:
-
-```
-kedro jupyter lab
-```
-
-### IPython
-And if you want to run an IPython session:
-
-```
-kedro ipython
-```
-
-### How to convert notebook cells to nodes in a Kedro project
-You can move notebook code over into a Kedro project structure using a mixture of [cell tagging](https://jupyter-notebook.readthedocs.io/en/stable/changelog.html#release-5-0-0) and Kedro CLI commands.
-
-By adding the `node` tag to a cell and running the command below, the cell's source code will be copied over to a Python file within `src/<package_name>/nodes/`:
-
-```
-kedro jupyter convert <filepath_to_my_notebook>
-```
-> *Note:* The name of the Python file matches the name of the original notebook.
-
-Alternatively, you may want to transform all your notebooks in one go. Run the following command to convert all notebook files found in the project root directory and under any of its sub-folders:
-
-```
-kedro jupyter convert --all
-```
-
-### How to ignore notebook output cells in `git`
-To automatically strip out all output cell contents before committing to `git`, you can run `kedro activate-nbstripout`. This will add a hook in `.git/config` which will run `nbstripout` before anything is committed to `git`.
-
-> *Note:* Your output cells will be retained locally.
-
-## Package your Kedro project
-
-[Further information about building project documentation and packaging your project](https://kedro.readthedocs.io/en/stable/tutorial/package_a_project.html)
+* ``Default``: Run this pipeline by executing ``kedro pipeline run``
+  * This pipeline requires a collection of PDF files in ``data/01_raw``. The files can be in any kind of subdirectory as well.
+  * The default pipeline extracts texts from PDF files and Wikipedia articles to create a base dataset for model training.
+  * The dataset is preprocessed and split into train and test datasets
+  * A model is initialized and trained on the training dataset
+  * After training the model makes predictions for the test dataset, and it's performance is evaluated
+  * The model can be further used in the ``Predict Text`` pipeline
+  * The model metrics can be seen using MlFlow or under ``08_reporting/model_metrics/model_metrics.json`` 
+* ``Predict Text``: Run this pipeline by executing ``kedro pipeline run --pipeline predict_text``
+  * This pipeline requires a trained model as well as a text file containing text in ``data/04_feature/words_to_predict/words_to_predict.txt``
+  * This pipeline extracts tokens from the specified text file, preprocesses them and makes predictions for each token.
+  * The predictions can be found in ``data/07_model_output/predicted_words.csv``, where a label of 1 indicates that the word belongs to the trained domain.
