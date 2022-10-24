@@ -2,7 +2,6 @@
 spacy_model:
   type: pickle.PickleDataSet
   filepath: data/06_models/nlp_models/spacy_model.pkl
-  layer: models
 
 # Text extraction datasets
 token_word_counts_pdf:
