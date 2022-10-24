@@ -1,0 +1,2 @@
+# Define the used spacy model. For further information check https://spacy.io/usage/models
+spacy_model_name: de_core_news_lg
