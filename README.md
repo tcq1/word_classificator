@@ -72,3 +72,15 @@ The configured Dockerfile will run the flask application upon running the contai
 >   * text_extraction
 > * (Optional, can also be done once deployed) Train a model
 > * Configure all parameters in ``conf/base/parameters``
+
+### Docker Compose
+In order to include the docker image of this project simply add following entry to an existing docker-compose file:
+```
+classificator:  
+  image: word-classificator
+  ports:
+    - "<PORT>:5000"
+```
+PORT can be replaced with any free port on the host machine. The port *5000* is the default port of the flask application.
+The flask application should then be accessible on the host machine via ``http://localhost:<PORT>``.
+
