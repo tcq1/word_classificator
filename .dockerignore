@@ -1,0 +1,28 @@
+##########################
+# Kedro PROJECT
+
+# ignore Dockerfile, .dockerignore and .dive-ci
+Dockerfile
+.dockerignore
+.dive-ci
+
+# ignore potentially sensitive credentials files
+conf/**/*credentials*
+
+# ignore all local configuration
+conf/local
+!conf/local/.gitkeep
+
+# ignore everything in the following folders
+docs
+logs
+notebooks
+references
+results
+mlruns
+
+# except the following
+!logs/.gitkeep
+!notebooks/.gitkeep
+!references/.gitkeep
+!results/.gitkeep
