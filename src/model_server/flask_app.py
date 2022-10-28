@@ -12,6 +12,10 @@ app = Flask(__name__)
 
 @app.route("/")
 def index():
+    """ Entry point of webapp. Can be used as healthcheck
+
+    :return: Simple HTML text
+    """
     return "<p>Flask app is running!</p>"
 
 
