@@ -54,3 +54,21 @@ This Kedro project mainly supports two pipelines:
   * This pipeline requires a trained model as well as a text file containing text in ``data/04_feature/words_to_predict/words_to_predict.txt``
   * This pipeline extracts tokens from the specified text file, preprocesses them and makes predictions for each token.
   * The predictions can be found in ``data/07_model_output/predicted_words.csv``, where a label of 1 indicates that the word belongs to the trained domain.
+
+## Flask Application
+The Kedro pipelines can also be triggered using a [Flask](https://flask.palletsprojects.com/) application.
+In order to run the flask application simply run ``flask --app flask_app run`` in the ``src/model_server`` directory.
+
+## Docker Container
+In order to deploy this project in a Docker container simply run ``kedro docker build`` to build an image.
+The configured Dockerfile will run the flask application upon running the container to make the kedro pipelines accessible.
+
+> ATTENTION: All files and directories in the *data* directory are copied into the container. This can be used to serve a pretrained model.
+> The accessible pipelines can only train a model, load training data or make predictions. In order to have a functioning
+> project it is necessary to have executed following steps *BEFORE* building the image:
+> * Collect PDF files in ``data/01_raw``
+> * Run following pipelines:
+>   * load_spacy_model
+>   * text_extraction
+> * (Optional, can also be done once deployed) Train a model
+> * Configure all parameters in ``conf/base/parameters``
