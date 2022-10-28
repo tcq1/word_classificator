@@ -47,6 +47,7 @@ def cleanup_data(root_dir: str, target_dir: str, extensions: List[str]):
 
 def pdf_to_string(path):
     """ Converts a pdf file to a string. String contains
+
     :param path: Path to pdf file
     :return: String
     """
@@ -72,10 +73,10 @@ def pdf_to_string(path):
 
 def replace_cid_codes(string):
     """ Takes a string and replaces relevant cid codes
+
     :param string: string with cid codes
     :return: string with relevant cid codes replaced
     """
-
     # letters
     string = string.replace('(cid:228)', 'ä')
     string = string.replace('(cid:246)', 'ö')
@@ -121,6 +122,7 @@ def convert_pdfs_to_text(pdf_root_dir: str, _) -> List[str]:
 
 def add_element_to_dict(dictionary, element):
     """ Adds an element to a dictionary. If not in dictionary, adds a new key to dictionary.
+
     :param dictionary: dictionary
     :param element: string
     :return: updated dictionary

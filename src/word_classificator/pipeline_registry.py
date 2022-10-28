@@ -18,6 +18,7 @@ def register_pipelines() -> Dict[str, Pipeline]:
     pipelines["text_extraction_wikipedia_pipeline"] = text_extraction.create_pipeline(dataset="wikipedia")
 
     pipelines["__default__"] = sum(pipelines.values())
-    pipelines["predict_text"] = data_preprocessing.create_pipeline(train_new_model=False) + prediction.create_pipeline(train_new_model=False)
+    pipelines["predict_text"] = data_preprocessing.create_pipeline(train_new_model=False) + \
+                                prediction.create_pipeline(train_new_model=False)
 
     return pipelines

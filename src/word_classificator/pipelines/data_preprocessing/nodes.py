@@ -1,10 +1,7 @@
 from typing import Dict, List, Tuple
 
-import numpy as np
 import pandas as pd
-import spacy.tokens
 from sklearn.model_selection import train_test_split
-from spacy.tokens import Token
 
 from word_classificator.classifier_features.features import *
 
