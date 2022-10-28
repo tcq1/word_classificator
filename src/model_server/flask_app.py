@@ -4,7 +4,7 @@ import os
 from flask import Flask, request
 from kedro.framework.startup import bootstrap_project
 
-from callbacks import *
+from model_server.callbacks import *
 
 
 app = Flask(__name__)
@@ -21,6 +21,10 @@ def retrieve_training_data():
 
     :return: JSON with positive and negative samples
     """
+    # bootstrap kedro project
+    os.chdir("/home/kedro")
+    bootstrap_project(Path.cwd())
+
     # get samples
     positive_samples = callback_get_data_positives()
     negative_samples = callback_get_data_negatives()
@@ -44,6 +48,10 @@ def retrieve_tags():
     # get text from request
     text = request.args.get("text")
 
+    # bootstrap kedro project
+    os.chdir("/home/kedro")
+    bootstrap_project(Path.cwd())
+
     tags = callback_retrieve_tags(text)
 
     return {
@@ -65,6 +73,10 @@ def train_model():
     positive_samples = training_data["positives"].split(",")
     negative_samples = training_data["negatives"].split(",")
 
+    # bootstrap kedro project
+    os.chdir("/home/kedro")
+    bootstrap_project(Path.cwd())
+
     # call training
     metrics = callback_train(positive_samples, negative_samples)
 
@@ -75,10 +87,4 @@ def train_model():
 
 
 if __name__ == '__main__':
-    # uncomment next line if not working in a Docker container
-    # os.chdir("../../..")
-
-    # bootstrap kedro project
-    bootstrap_project(Path.cwd())
-    
-    app.run(host="0.0.0.0", port=5000)
+    app.run()

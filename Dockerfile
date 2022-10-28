@@ -6,7 +6,7 @@ RUN pip install poetry==1.2.2
 
 # install project requirements
 COPY pyproject.toml poetry.lock /
-RUN poetry config virtualenvs.create false && poetry install
+RUN poetry config virtualenvs.create false && poetry install --no-root
 
 # add kedro user
 ARG KEDRO_UID=999
@@ -21,6 +21,9 @@ RUN chown -R kedro:${KEDRO_GID} /home/kedro
 USER kedro
 RUN chmod -R a+w /home/kedro
 
-EXPOSE 8888
+# expose to port 5000
+EXPOSE 5000
 
-CMD ["kedro", "run"]
+# run flask app
+WORKDIR src/model_server
+CMD ["flask", "--app", "flask_app", "run", "--host", "0.0.0.0"]
