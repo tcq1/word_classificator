@@ -75,7 +75,10 @@ def train_model():
 
 
 if __name__ == '__main__':
-    os.chdir("/home/kedro")
-    bootstrap_project(Path.cwd())
+    # uncomment next line if not working in a Docker container
+    # os.chdir("../../..")
 
+    # bootstrap kedro project
+    bootstrap_project(Path.cwd())
+    
     app.run(host="0.0.0.0", port=5000)
