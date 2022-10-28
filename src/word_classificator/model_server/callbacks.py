@@ -68,7 +68,7 @@ def callback_train(training_data_positive: List[str], training_data_negative: Li
         catalog.save("negative_samples", negative_samples_df)
 
         # call default pipeline starting from merge datasets node, which takes positive and negative samples as input
-        session.run(from_nodes="merge_datasets_node")
+        session.run(from_nodes=["merge_datasets_node", "initialize_classifier_node"])
 
         # load model metrics from evaluation
         model_metrics = catalog.load("model_metrics_dict")
