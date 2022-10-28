@@ -1,9 +1,12 @@
-ARG BASE_IMAGE=python:3.6-buster
+ARG BASE_IMAGE=python:3.10.8-slim-buster
 FROM $BASE_IMAGE
 
+# install poetry
+RUN pip install poetry==1.2.2
+
 # install project requirements
-COPY src/requirements.txt /tmp/requirements.txt
-RUN pip install -r /tmp/requirements.txt && rm -f /tmp/requirements.txt
+COPY pyproject.toml poetry.lock /
+RUN poetry config virtualenvs.create false && poetry install
 
 # add kedro user
 ARG KEDRO_UID=999
