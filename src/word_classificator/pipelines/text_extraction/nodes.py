@@ -112,6 +112,7 @@ def convert_pdfs_to_text(pdf_root_dir: str, _) -> List[str]:
 
                 # add to dataset
                 dataset.append(processed_text)
+                log.info(f"Done with processing file {filename}!")
             except FileNotFoundError:
                 log.info(f"Couldn't find file {filepath}. Skipping...")
             except pdfminer.pdfdocument.PDFTextExtractionNotAllowed:
@@ -199,6 +200,7 @@ def get_wikipedia_articles(num_pages: int, language: str) -> List[str]:
         try:
             articles.append(wikipedia.page(title=wikipedia.random()).content)
             counter += 1
+            log.info(f"{counter}/{num_pages}: Downloading {articles[-1].title}")
         except wikipedia.DisambiguationError:
             # skip if DisambiguationError appears and decrement counter
             log.info('DisambiguationError! Skip...')
