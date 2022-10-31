@@ -70,7 +70,7 @@ The configured Dockerfile will run the flask application upon running the contai
 > * Run following pipelines:
 >   * load_spacy_model
 >   * text_extraction
-> * (Optional, can also be done once deployed) Train a model
+> * (Optional, can also be done once deployed) Train a model --> run default pipeline
 > * Configure all parameters in ``conf/base/parameters``
 
 ### Docker Compose
