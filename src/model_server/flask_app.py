@@ -1,4 +1,3 @@
-import json
 import os
 
 from flask import Flask, request
@@ -58,7 +57,7 @@ def retrieve_tags():
     :return: list of positively labeled words
     """
     # get text from request
-    text = request.args.get("text")
+    text = request.data.decode('utf-8')
 
     # bootstrap kedro project
     os.chdir("/home/kedro")
@@ -79,7 +78,7 @@ def train_model():
     :return: JSON data containing model metrics
     """
     # get training data
-    training_data = json.loads(request.get_json())
+    training_data = request.get_json()
 
     # extract positive and negative samples
     positive_samples = training_data["positives"].split(",")
