@@ -73,6 +73,10 @@ The configured Dockerfile will run the flask application upon running the contai
 > * (Optional, can also be done once deployed) Train a model --> run default pipeline
 > * Configure all parameters in ``conf/base/parameters``
 
+### Known issue with building images on Windows machines
+Executing some pipelines Pickle files are generated. Doing this on Windows machines will result in an error trying to load
+these files in the Docker image. Hence, it is only possible to build images without Pickle files, if building on a Windows machine! 
+
 ### Docker Compose
 In order to include the docker image of this project simply add following entry to an existing docker-compose file:
 ```
