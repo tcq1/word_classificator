@@ -26,4 +26,4 @@ EXPOSE 5000
 
 # run flask app
 WORKDIR src/model_server
-CMD ["flask", "--app", "flask_app", "run", "--host", "0.0.0.0"]
+CMD ["flask", "--app", "flask_app", "run", "--host", "0.0.0.0", "--port", "5000"]
