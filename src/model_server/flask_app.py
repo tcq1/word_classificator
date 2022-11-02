@@ -1,3 +1,4 @@
+import logging
 import os
 
 from flask import Flask, request
@@ -5,8 +6,8 @@ from kedro.framework.startup import bootstrap_project
 
 from model_server.callbacks import *
 
-
 app = Flask(__name__)
+log = logging.getLogger(__name__)
 
 
 @app.route("/")
@@ -23,6 +24,8 @@ def entry():
         <li>/start_training</li>
     </ul>
     """
+    log.info("Client has entered entry point!")
+
     return html_string
 
 
@@ -32,6 +35,8 @@ def retrieve_training_data():
 
     :return: JSON with positive and negative samples
     """
+    log.info("Retrieve training data requested!")
+
     # bootstrap kedro project
     os.chdir("/home/kedro")
     bootstrap_project(Path.cwd())
@@ -43,6 +48,8 @@ def retrieve_training_data():
     # remove any non string elements
     positive_samples = [sample for sample in positive_samples if type(sample) == str]
     negative_samples = [sample for sample in negative_samples if type(sample) == str]
+
+    log.info("Retrieve training data finished!")
 
     return {
         "positives": ','.join(positive_samples),
@@ -56,6 +63,8 @@ def retrieve_tags():
 
     :return: list of positively labeled words
     """
+    log.info("Tagging requested!")
+
     # get text from request
     text = request.data.decode('utf-8')
 
@@ -64,6 +73,8 @@ def retrieve_tags():
     bootstrap_project(Path.cwd())
 
     tags = callback_retrieve_tags(text)
+
+    log.info("Tagging finished!")
 
     return {
         "result": "success",
@@ -77,6 +88,8 @@ def train_model():
 
     :return: JSON data containing model metrics
     """
+    log.info("Model training requested!")
+
     # get training data
     training_data = request.get_json()
 
@@ -90,6 +103,8 @@ def train_model():
 
     # call training
     metrics = callback_train(positive_samples, negative_samples)
+
+    log.info("Model training finished!")
 
     return {
         "res": "success",
